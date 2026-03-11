@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coal Country Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F5A623;
+    --orange-light: #FFB84D;
+    --orange-dim: rgba(245,166,35,0.4);
+    --orange-glow: rgba(245,166,35,0.15);
+    --red: #ff5252;
+    --green: #4ade80;
+    --white: rgba(255,255,255,0.92);
+    --muted: rgba(255,255,255,0.42);
+    --glass: rgba(255,255,255,0.07);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-hover: rgba(255,255,255,0.12);
+    --dark: #080808;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    min-height:100vh;
+    max-width:480px;
+    margin:0 auto;
+    font-family:'DM Sans',sans-serif;
+    color:var(--white);
+    overflow-x:hidden;
+    background:#080808;
+  }
+
+  /* BACKGROUND */
+  .bg { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+
+  .orb {
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    animation:float 9s ease-in-out infinite;
+  }
+
+  .orb-1 { width:420px; height:420px; background:radial-gradient(circle,rgba(245,166,35,0.28) 0%,transparent 70%); top:-140px; left:-120px; animation-delay:0s; }
+  .orb-2 { width:320px; height:320px; background:radial-gradient(circle,rgba(30,30,30,0.9) 0%,transparent 70%); bottom:-60px; right:-80px; animation-delay:-4s; }
+  .orb-3 { width:260px; height:260px; background:radial-gradient(circle,rgba(245,166,35,0.12) 0%,transparent 70%); top:45%; left:25%; animation-delay:-6s; }
+
+  @keyframes float {
+    0%,100% { transform:translate(0,0) scale(1); }
+    33% { transform:translate(18px,-28px) scale(1.04); }
+    66% { transform:translate(-12px,18px) scale(0.97); }
+  }
+
+  /* HEADER */
+  .header {
+    position:sticky; top:0; z-index:100;
+    padding:18px 20px 14px;
+    background:rgba(8,8,8,0.7);
+    backdrop-filter:blur(32px) saturate(180%);
+    -webkit-backdrop-filter:blur(32px) saturate(180%);
+    border-bottom:1px solid rgba(245,166,35,0.2);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+
+  .header-left { display:flex; align-items:center; gap:12px; }
+
+  .logo-circle {
+    width:42px; height:42px;
+    background:linear-gradient(135deg,var(--orange),#c47a10);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    box-shadow:0 0 16px rgba(245,166,35,0.35);
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .logo-circle::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:50%;
+    background:rgba(255,255,255,0.2);
+    border-radius:50% 50% 0 0;
+  }
+
+  .brand-name {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:22px; letter-spacing:3px;
+    background:linear-gradient(135deg,var(--orange-light),var(--orange),#c47a10);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .brand-sub { font-size:9px; letter-spacing:3.5px; color:var(--muted); text-transform:uppercase; margin-top:1px; }
+
+  .settings-btn {
+    width:38px; height:38px;
+    background:var(--glass);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    border-radius:12px;
+    color:var(--muted); font-size:16px;
+    cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .settings-btn:hover { background:var(--glass-hover); color:var(--orange); border-color:var(--orange-dim); }
+
+  /* WRAP */
+  .wrap { position:relative; z-index:1; padding-bottom:40px; }
+
+  /* SUMMARY */
+  .summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:18px 16px 12px; }
+
+  .summary-card {
+    background:var(--glass);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid var(--glass-border);
+    border-radius:18px;
+    padding:14px 8px;
+    text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .summary-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);
+  }
+  .summary-card.net-card {
+    border-color:var(--orange-dim);
+    background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(245,166,35,0.03));
+  }
+  .summary-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .summary-value { font-family:'Bebas Neue',sans-serif; font-size:20px; }
+
+  /* TABS */
+  .tab-wrap {
+    margin:0 16px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    border-radius:16px; padding:5px;
+    display:flex; gap:4px;
+  }
+  .tab {
+    flex:1; padding:10px 6px;
+    border:none; border-radius:12px;
+    background:transparent;
+    color:var(--muted);
+    font-family:'DM Sans',sans-serif;
+    font-size:12px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;
+    cursor:pointer; transition:all 0.25s;
+  }
+  .tab.active {
+    background:rgba(245,166,35,0.15);
+    color:var(--orange-light);
+    box-shadow:0 2px 12px rgba(245,166,35,0.12), inset 0 1px 0 rgba(255,255,255,0.12);
+    border:1px solid rgba(245,166,35,0.25);
+  }
+
+  /* CONTENT */
+  .content { padding:14px 16px 0; }
+  .section { display:none; }
+  .section.active { display:block; }
+
+  .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding:0 2px; }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; color:var(--orange-light); }
+  .section-total { font-family:'Bebas Neue',sans-serif; font-size:22px; }
+
+  /* BUTTONS */
+  .scan-btn {
+    width:100%; padding:14px;
+    background:linear-gradient(135deg,rgba(245,166,35,0.18),rgba(245,166,35,0.06));
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(245,166,35,0.35);
+    border-radius:16px;
+    color:var(--orange-light);
+    font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; transition:all 0.2s;
+    margin-bottom:10px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    position:relative; overflow:hidden;
+  }
+  .scan-btn::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(245,166,35,0.45),transparent);
+  }
+  .scan-btn:active { transform:scale(0.98); background:rgba(245,166,35,0.22); }
+
+  .add-btn {
+    width:100%; padding:13px;
+    background:var(--glass);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    color:var(--muted);
+    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.5px;
+    cursor:pointer; transition:all 0.2s;
+    margin-bottom:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .add-btn:active { background:var(--glass-hover); color:var(--white); transform:scale(0.98); }
+  .plus { font-size:18px; font-weight:300; line-height:1; }
+
+  /* PERSON TABS */
+  .person-tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .person-tab {
+    flex:1; padding:9px;
+    background:var(--glass);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-border);
+    border-radius:12px;
+    color:var(--muted); font-size:12px; font-weight:600;
+    text-transform:uppercase; letter-spacing:1px;
+    cursor:pointer; transition:all 0.2s; text-align:center;
+  }
+  .person-tab.active {
+    background:linear-gradient(135deg,rgba(245,166,35,0.16),rgba(245,166,35,0.05));
+    border-color:rgba(245,166,35,0.4);
+    color:var(--orange-light);
+    box-shadow:0 2px 14px rgba(245,166,35,0.12);
+  }
+
+  /* ENTRIES */
+  .entries { display:flex; flex-direction:column; gap:8px; }
+
+  .entry {
+    background:var(--glass);
+    backdrop-filter:blur(20px) saturate(150%);
+    -webkit-backdrop-filter:blur(20px) saturate(150%);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    padding:12px 14px;
+    display:flex; justify-content:space-between; align-items:center;
+    animation:slideIn 0.25s ease;
+    position:relative; overflow:hidden;
+  }
+  .entry::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .entry-info { flex:1; }
+  .entry-name { font-size:13px; font-weight:500; color:var(--white); }
+  .entry-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+  .entry-right { display:flex; align-items:center; gap:10px; }
+  .entry-amount { font-family:'Bebas Neue',sans-serif; font-size:20px; }
+
+  .delete-btn {
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.09);
+    border-radius:8px; color:var(--muted);
+    cursor:pointer; font-size:13px; padding:4px 7px;
+    transition:all 0.2s; line-height:1;
+  }
+  .delete-btn:hover { background:rgba(255,82,82,0.12); border-color:rgba(255,82,82,0.25); color:var(--red); }
+
+  .empty-state { text-align:center; padding:36px 20px; color:var(--muted); font-size:13px; }
+
+  /* KEY NOTICE */
+  .key-notice {
+    background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(245,166,35,0.04));
+    border:1px solid rgba(245,166,35,0.25);
+    border-radius:12px; padding:10px 14px;
+    margin-bottom:12px; font-size:12px; color:rgba(245,166,35,0.85);
+    display:none;
+  }
+  .key-notice.show { display:block; }
+
+  /* MODALS */
+  .modal-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    z-index:200; align-items:flex-end; justify-content:center;
+  }
+  .modal-overlay.open { display:flex; }
+
+  .modal {
+    background:rgba(10,10,10,0.88);
+    backdrop-filter:blur(40px) saturate(200%);
+    -webkit-backdrop-filter:blur(40px) saturate(200%);
+    border:1px solid rgba(255,255,255,0.1);
+    border-bottom:none;
+    border-radius:28px 28px 0 0;
+    padding:28px 20px 40px;
+    width:100%; max-width:480px;
+    animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-height:92vh; overflow-y:auto;
+    position:relative;
+  }
+  .modal::before {
+    content:'';
+    position:absolute; top:12px; left:50%; transform:translateX(-50%);
+    width:36px; height:4px;
+    background:rgba(255,255,255,0.18); border-radius:2px;
+  }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+  .modal-title {
+    font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:2px;
+    background:linear-gradient(135deg,var(--orange-light),var(--orange));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:20px; margin-top:10px;
+  }
+
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+  .field input, .field select {
+    width:100%;
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--glass-border);
+    border-radius:14px; padding:13px 16px;
+    color:var(--white); font-family:'DM Sans',sans-serif; font-size:15px;
+    outline:none; transition:all 0.2s; -webkit-appearance:none;
+  }
+  .field input:focus, .field select:focus { border-color:rgba(245,166,35,0.5); background:rgba(255,255,255,0.1); }
+  .field input::placeholder { color:rgba(255,255,255,0.18); }
+  .field select option { background:#111; color:white; }
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  .modal-actions { display:flex; gap:10px; margin-top:20px; }
+  .btn-cancel {
+    flex:1; padding:14px;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--glass-border); border-radius:16px;
+    color:var(--muted); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .btn-cancel:active { background:rgba(255,255,255,0.1); }
+
+  .btn-save {
+    flex:2; padding:14px;
+    background:linear-gradient(135deg,var(--orange-light),var(--orange),#c47a10);
+    border:none; border-radius:16px;
+    color:#080808; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px;
+    cursor:pointer; transition:all 0.2s;
+    box-shadow:0 4px 20px rgba(245,166,35,0.3);
+    position:relative; overflow:hidden;
+  }
+  .btn-save::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:50%;
+    background:rgba(255,255,255,0.18); border-radius:16px 16px 0 0;
+  }
+  .btn-save:active { transform:scale(0.97); box-shadow:0 2px 10px rgba(245,166,35,0.2); }
+  .btn-save:disabled { background:rgba(255,255,255,0.08); color:var(--muted); box-shadow:none; cursor:not-allowed; }
+
+  /* UPLOAD */
+  .upload-area {
+    background:rgba(255,255,255,0.04);
+    border:2px dashed rgba(255,255,255,0.13);
+    border-radius:18px; padding:32px 16px;
+    text-align:center; cursor:pointer; transition:all 0.2s;
+    margin-bottom:14px; position:relative;
+  }
+  .upload-area:hover { border-color:rgba(245,166,35,0.4); background:rgba(245,166,35,0.05); }
+  .upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .upload-icon { font-size:36px; margin-bottom:10px; }
+  .upload-label { font-size:13px; color:var(--muted); line-height:1.7; }
+  .upload-label strong { color:rgba(245,166,35,0.85); display:block; margin-bottom:2px; font-size:14px; }
+
+  .receipt-preview { width:100%; max-height:180px; object-fit:cover; border-radius:14px; margin-bottom:14px; display:none; border:1px solid var(--glass-border); }
+
+  .scan-status {
+    display:none; align-items:center; gap:10px;
+    padding:13px 16px;
+    background:rgba(245,166,35,0.08);
+    border:1px solid rgba(245,166,35,0.22);
+    border-radius:14px; margin-bottom:14px;
+    font-size:13px; color:var(--orange-light);
+  }
+  .scan-status.visible { display:flex; }
+  .spinner { width:16px; height:16px; border:2px solid rgba(245,166,35,0.25); border-top-color:var(--orange); border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  .scanned-badge { display:none; font-size:10px; letter-spacing:1px; text-transform:uppercase; background:rgba(74,222,128,0.1); color:var(--green); border:1px solid rgba(74,222,128,0.22); border-radius:6px; padding:2px 7px; margin-left:6px; vertical-align:middle; }
+
+  /* NET */
+  .net-glass {
+    background:var(--glass);
+    backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    border:1px solid var(--glass-border);
+    border-radius:20px; padding:18px;
+    margin-bottom:12px; position:relative; overflow:hidden;
+  }
+  .net-glass::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+  }
+  .net-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .net-row:last-child { border-bottom:none; }
+  .net-row-label { font-size:12px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .net-row-value { font-family:'Bebas Neue',sans-serif; font-size:24px; }
+  .net-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(245,166,35,0.3),transparent); margin:6px 0; }
+  .net-profit-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0 4px; }
+  .net-profit-label { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:2px; color:var(--orange-light); }
+  .net-profit-value { font-family:'Bebas Neue',sans-serif; font-size:36px; }
+
+  .breakdown-title { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:16px 0 10px; }
+  .person-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .person-glass {
+    background:var(--glass);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    border-radius:16px; padding:14px;
+    position:relative; overflow:hidden;
+  }
+  .person-glass::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+  }
+  .person-glass-name { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .person-glass-amount { font-family:'Bebas Neue',sans-serif; font-size:26px; }
+
+  /* COLORS */
+  .c-green { color:var(--green); }
+  .c-red { color:var(--red); }
+  .c-orange { color:var(--orange-light); }
+
+  .spacer { height:30px; }
+  .info-text { font-size:12px; color:var(--muted); line-height:1.8; }
+  .info-text strong { color:rgba(255,255,255,0.65); }
+  .info-highlight { color:var(--orange-light); font-weight:600; }
+
+  /* ORANGE ACCENT LINE on entries */
+  .entry.job-entry { border-left:2px solid rgba(245,166,35,0.4); }
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-circle">⛰️</div>
+    <div>
+      <div class="brand-name">Coal Country</div>
+      <div class="brand-sub">Finance Tracker</div>
+    </div>
+  </div>
+  <button class="settings-btn" onclick="openModal('settings')">⚙️</button>
+</div>
+
+<div class="wrap">
+
+  <div class="summary">
+    <div class="summary-card">
+      <div class="summary-label">Revenue</div>
+      <div class="summary-value c-green" id="sum-revenue">$0</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Expenses</div>
+      <div class="summary-value c-red" id="sum-expenses">$0</div>
+    </div>
+    <div class="summary-card net-card">
+      <div class="summary-label">Net</div>
+      <div class="summary-value c-orange" id="sum-net">$0</div>
+    </div>
+  </div>
+
+  <div class="tab-wrap">
+    <button class="tab active" onclick="switchTab('jobs')">Jobs</button>
+    <button class="tab" onclick="switchTab('expenses')">Expenses</button>
+    <button class="tab" onclick="switchTab('net')">Net Profit</button>
+  </div>
+
+  <div class="content">
+
+    <!-- JOBS -->
+    <div class="section active" id="section-jobs">
+      <div class="section-header">
+        <div class="section-title">Jobs</div>
+        <div class="section-total c-green" id="jobs-total">$0</div>
+      </div>
+      <button class="add-btn" onclick="openModal('job')"><span class="plus">+</span> Add Job</button>
+      <div class="entries" id="jobs-list"></div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="section" id="section-expenses">
+      <div class="section-header">
+        <div class="section-title">Expenses</div>
+        <div class="section-total c-red" id="expenses-total">$0</div>
+      </div>
+      <div class="person-tabs">
+        <button class="person-tab active" onclick="switchPerson('andrew')">Andrew</button>
+        <button class="person-tab" onclick="switchPerson('eli')">Eli</button>
+      </div>
+      <div class="key-notice" id="key-notice">⚠️ Add your API key in ⚙️ Settings to enable AI scanning.</div>
+      <button class="scan-btn" onclick="openModal('scan')">📷 &nbsp;Scan Receipt with AI</button>
+      <button class="add-btn" onclick="openModal('expense')"><span class="plus">+</span> Add Manually</button>
+      <div class="entries" id="expenses-list"></div>
+    </div>
+
+    <!-- NET PROFIT -->
+    <div class="section" id="section-net">
+      <div class="section-header" style="margin-bottom:16px">
+        <div class="section-title">Net Profit</div>
+      </div>
+      <div class="net-glass">
+        <div class="net-row">
+          <div class="net-row-label">Total Revenue</div>
+          <div class="net-row-value c-green" id="net-revenue">$0</div>
+        </div>
+        <div class="net-row">
+          <div class="net-row-label">Total Expenses</div>
+          <div class="net-row-value c-red" id="net-expenses">$0</div>
+        </div>
+        <div class="net-divider"></div>
+        <div class="net-profit-row">
+          <div class="net-profit-label">Net Profit</div>
+          <div class="net-profit-value" id="net-profit">$0</div>
+        </div>
+      </div>
+      <div class="breakdown-title">Spending by Person</div>
+      <div class="person-breakdown">
+        <div class="person-glass">
+          <div class="person-glass-name">Andrew</div>
+          <div class="person-glass-amount c-red" id="net-andrew">$0</div>
+        </div>
+        <div class="person-glass">
+          <div class="person-glass-name">Eli</div>
+          <div class="person-glass-amount c-red" id="net-eli">$0</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal">
+    <div class="modal-title">Settings</div>
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <input type="password" id="settings-apikey" placeholder="sk-ant-..." autocomplete="off" autocorrect="off" autocapitalize="none">
+    </div>
+    <p class="info-text">
+      Stored <strong>only on this device</strong>, used only for receipt scanning.<br>
+      Get yours at <span class="info-highlight">console.anthropic.com</span> → API Keys.
+    </p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('settings')">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOB MODAL -->
+<div class="modal-overlay" id="modal-job">
+  <div class="modal">
+    <div class="modal-title">Add Job</div>
+    <div class="field-row">
+      <div class="field"><label>Year</label><input type="number" id="job-year" placeholder="2024"></div>
+      <div class="field"><label>Make</label><input type="text" id="job-make" placeholder="Ford"></div>
+    </div>
+    <div class="field"><label>Model</label><input type="text" id="job-model" placeholder="F-150"></div>
+    <div class="field"><label>Amount Paid ($)</label><input type="number" id="job-amount" placeholder="0.00" step="0.01"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('job')">Cancel</button>
+      <button class="btn-save" onclick="saveJob()">Save Job</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANUAL EXPENSE MODAL -->
+<div class="modal-overlay" id="modal-expense">
+  <div class="modal">
+    <div class="modal-title">Add Receipt</div>
+    <div class="field"><label>Person</label><select id="expense-person"><option value="andrew">Andrew</option><option value="eli">Eli</option></select></div>
+    <div class="field"><label>Description</label><input type="text" id="expense-desc" placeholder="e.g. Meguiar's soap, microfibers..."></div>
+    <div class="field"><label>Amount ($)</label><input type="number" id="expense-amount" placeholder="0.00" step="0.01"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('expense')">Cancel</button>
+      <button class="btn-save" onclick="saveExpense()">Save Receipt</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCAN MODAL -->
+<div class="modal-overlay" id="modal-scan">
+  <div class="modal">
+    <div class="modal-title">Scan Receipt</div>
+    <div class="field"><label>Who bought this?</label><select id="scan-person"><option value="andrew">Andrew</option><option value="eli">Eli</option></select></div>
+    <div class="upload-area" id="upload-area">
+      <input type="file" id="receipt-file" accept="image/*" onchange="handleImageSelect(event)">
+      <div class="upload-icon">🧾</div>
+      <div class="upload-label"><strong>Tap to choose photo or take one</strong>Camera roll or snap a new photo</div>
+    </div>
+    <img id="receipt-preview" class="receipt-preview" alt="Receipt preview">
+    <div class="scan-status" id="scan-status">
+      <div class="spinner"></div>
+      <span>Reading your receipt...</span>
+    </div>
+    <div class="field">
+      <label>Description <span class="scanned-badge" id="scanned-badge">AI Scanned ✓</span></label>
+      <input type="text" id="scan-desc" placeholder="Will be filled automatically...">
+    </div>
+    <div class="field">
+      <label>Total Amount ($)</label>
+      <input type="number" id="scan-amount" placeholder="Will be filled automatically..." step="0.01">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('scan')">Cancel</button>
+      <button class="btn-save" id="scan-save-btn" onclick="saveScan()" disabled>Save Receipt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const HARDCODED_KEY='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';
+  let state={jobs:[],expenses:[],activePerson:'andrew'};
+  function loadState(){try{const s=localStorage.getItem('ccf-v6');if(s)state=JSON.parse(s);}catch(e){}}
+  function saveState(){localStorage.setItem('ccf-v6',JSON.stringify(state));}
+  function checkKeyNotice(){document.getElementById('key-notice').classList.add('show');document.getElementById('key-notice').style.display='none';}
+
+  function switchTab(tab){
+    document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['jobs','expenses','net'][i]===tab));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('section-'+tab).classList.add('active');
+    if(tab==='expenses'){renderExpenses();checkKeyNotice();}
+    if(tab==='net')renderNet();
+  }
+
+  function switchPerson(p){
+    state.activePerson=p;
+    document.querySelectorAll('.person-tab').forEach((t,i)=>t.classList.toggle('active',['andrew','eli'][i]===p));
+    document.getElementById('expense-person').value=p;
+    document.getElementById('scan-person').value=p;
+    renderExpenses();
+  }
+
+  function openModal(type){
+    if(type==='expense')document.getElementById('expense-person').value=state.activePerson;
+    if(type==='scan'){
+      document.getElementById('scan-person').value=state.activePerson;resetScanModal();
+    }
+    if(type==='settings')document.getElementById('settings-apikey').value=localStorage.getItem('ccf-api-key')||'';
+    document.getElementById('modal-'+type).classList.add('open');
+  }
+
+  function closeModal(type){
+    document.getElementById('modal-'+type).classList.remove('open');
+    if(type==='job')['job-year','job-make','job-model','job-amount'].forEach(id=>document.getElementById(id).value='');
+    if(type==='expense')['expense-desc','expense-amount'].forEach(id=>document.getElementById(id).value='');
+    if(type==='scan')resetScanModal();
+  }
+
+  function saveSettings(){
+    const key=document.getElementById('settings-apikey').value.trim();
+    if(!key){alert('Please enter your API key.');return;}
+    localStorage.setItem('ccf-api-key',key);
+    closeModal('settings');checkKeyNotice();
+    alert('✅ API key saved! Receipt scanning is ready.');
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+  function resetScanModal(){
+    document.getElementById('receipt-file').value='';
+    document.getElementById('receipt-preview').style.display='none';
+    document.getElementById('upload-area').style.display='block';
+    document.getElementById('scan-status').classList.remove('visible');
+    document.getElementById('scan-desc').value='';
+    document.getElementById('scan-amount').value='';
+    document.getElementById('scan-save-btn').disabled=true;
+    document.getElementById('scanned-badge').style.display='none';
+  }
+
+  function handleImageSelect(event){
+    const file=event.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      const dataUrl=e.target.result;
+      const base64=dataUrl.split(',')[1];
+      const mime=file.type||'image/jpeg';
+      const preview=document.getElementById('receipt-preview');
+      preview.src=dataUrl;preview.style.display='block';
+      document.getElementById('upload-area').style.display='none';
+      scanReceipt(base64,mime);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function scanReceipt(base64,mime){
+    const apiKey=HARDCODED_KEY;
+    document.getElementById('scan-status').classList.add('visible');
+    document.getElementById('scan-save-btn').disabled=true;
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',max_tokens:300,
+          messages:[{role:'user',content:[
+            {type:'image',source:{type:'base64',media_type:mime,data:base64}},
+            {type:'text',text:'This is a purchase receipt for a mobile car detailing business. Extract: 1) concise description of items purchased (max 70 chars, skip store name), 2) final total amount as number only. Reply ONLY with JSON: {"description":"...","amount":0.00}'}
+          ]}]
+        })
+      });
+      if(!res.ok){const e=await res.json();throw new Error(e?.error?.message||'API error');}
+      const data=await res.json();
+      const text=data.content?.find(b=>b.type==='text')?.text||'';
+      const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+      document.getElementById('scan-desc').value=parsed.description||'';
+      document.getElementById('scan-amount').value=parsed.amount||'';
+      document.getElementById('scanned-badge').style.display='inline-block';
+      document.getElementById('scan-save-btn').disabled=false;
+    }catch(err){
+      document.getElementById('scan-desc').placeholder='Could not read — enter manually';
+      document.getElementById('scan-amount').placeholder='Could not read — enter manually';
+      document.getElementById('scan-save-btn').disabled=false;
+      alert('Could not read receipt: '+(err.message||'Unknown error')+'\n\nYou can enter details manually.');
+    }finally{
+      document.getElementById('scan-status').classList.remove('visible');
+    }
+  }
+
+  function saveScan(){
+    const person=document.getElementById('scan-person').value;
+    const desc=document.getElementById('scan-desc').value.trim();
+    const amount=parseFloat(document.getElementById('scan-amount').value);
+    if(!desc||isNaN(amount)||amount<=0){alert('Please fill in description and amount.');return;}
+    state.expenses.push({id:Date.now(),person,desc,amount,scanned:true});
+    saveState();renderExpenses();updateSummary();closeModal('scan');
+  }
+
+  function saveJob(){
+    const year=document.getElementById('job-year').value.trim();
+    const make=document.getElementById('job-make').value.trim();
+    const model=document.getElementById('job-model').value.trim();
+    const amount=parseFloat(document.getElementById('job-amount').value);
+    if(!make||!model||isNaN(amount)||amount<=0){alert('Please fill in all fields.');return;}
+    state.jobs.push({id:Date.now(),year,make,model,amount});
+    saveState();renderJobs();updateSummary();closeModal('job');
+  }
+
+  function deleteJob(id){state.jobs=state.jobs.filter(j=>j.id!==id);saveState();renderJobs();updateSummary();}
+
+  function saveExpense(){
+    const person=document.getElementById('expense-person').value;
+    const desc=document.getElementById('expense-desc').value.trim();
+    const amount=parseFloat(document.getElementById('expense-amount').value);
+    if(!desc||isNaN(amount)||amount<=0){alert('Please fill in all fields.');return;}
+    state.expenses.push({id:Date.now(),person,desc,amount});
+    saveState();renderExpenses();updateSummary();closeModal('expense');
+  }
+
+  function deleteExpense(id){state.expenses=state.expenses.filter(e=>e.id!==id);saveState();renderExpenses();updateSummary();}
+
+  function fmt(n){return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+
+  function renderJobs(){
+    const list=document.getElementById('jobs-list');
+    const total=state.jobs.reduce((s,j)=>s+j.amount,0);
+    document.getElementById('jobs-total').textContent=fmt(total);
+    if(!state.jobs.length){list.innerHTML='<div class="empty-state">No jobs yet. Add your first one!</div>';return;}
+    list.innerHTML=state.jobs.slice().reverse().map(j=>`
+      <div class="entry job-entry">
+        <div class="entry-info">
+          <div class="entry-name">${j.year?j.year+' ':''}${j.make} ${j.model}</div>
+          <div class="entry-sub">Detailing job</div>
+        </div>
+        <div class="entry-right">
+          <div class="entry-amount c-green">${fmt(j.amount)}</div>
+          <button class="delete-btn" onclick="deleteJob(${j.id})">✕</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderExpenses(){
+    const list=document.getElementById('expenses-list');
+    const allTotal=state.expenses.reduce((s,e)=>s+e.amount,0);
+    document.getElementById('expenses-total').textContent=fmt(allTotal);
+    const filtered=state.expenses.filter(e=>e.person===state.activePerson);
+    if(!filtered.length){list.innerHTML=`<div class="empty-state">No receipts for ${state.activePerson==='andrew'?'Andrew':'Eli'} yet.</div>`;return;}
+    list.innerHTML=filtered.slice().reverse().map(e=>`
+      <div class="entry">
+        <div class="entry-info">
+          <div class="entry-name">${e.desc}${e.scanned?' <span style="font-size:11px;opacity:0.45">📷</span>':''}</div>
+          <div class="entry-sub">${e.person==='andrew'?'Andrew':'Eli'}</div>
+        </div>
+        <div class="entry-right">
+          <div class="entry-amount c-red">-${fmt(e.amount)}</div>
+          <button class="delete-btn" onclick="deleteExpense(${e.id})">✕</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderNet(){
+    const revenue=state.jobs.reduce((s,j)=>s+j.amount,0);
+    const expenses=state.expenses.reduce((s,e)=>s+e.amount,0);
+    const net=revenue-expenses;
+    const aExp=state.expenses.filter(e=>e.person==='andrew').reduce((s,e)=>s+e.amount,0);
+    const eExp=state.expenses.filter(e=>e.person==='eli').reduce((s,e)=>s+e.amount,0);
+    document.getElementById('net-revenue').textContent=fmt(revenue);
+    document.getElementById('net-expenses').textContent=fmt(expenses);
+    const netEl=document.getElementById('net-profit');
+    netEl.textContent=fmt(Math.abs(net));
+    netEl.className='net-profit-value '+(net>=0?'c-green':'c-red');
+    document.getElementById('net-andrew').textContent=fmt(aExp);
+    document.getElementById('net-eli').textContent=fmt(eExp);
+  }
+
+  function updateSummary(){
+    const revenue=state.jobs.reduce((s,j)=>s+j.amount,0);
+    const expenses=state.expenses.reduce((s,e)=>s+e.amount,0);
+    const net=revenue-expenses;
+    document.getElementById('sum-revenue').textContent=fmt(revenue);
+    document.getElementById('sum-expenses').textContent=fmt(expenses);
+    const netEl=document.getElementById('sum-net');
+    netEl.textContent=fmt(Math.abs(net));
+    netEl.className='summary-value '+(net>=0?'c-green':'c-red');
+  }
+
+  loadState();renderJobs();renderExpenses();updateSummary();checkKeyNotice();
+</script>
+</body>
+</html>
